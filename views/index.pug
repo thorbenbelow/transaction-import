@@ -1,0 +1,12 @@
+extends layout.pug
+
+block search
+    form(class="d-flex" role="search")
+        input(class="form-control me-2" type="search" placeholder="Search" aria-label="Search")
+
+block content
+    ul(class="list-group mt-4")
+        each transaction in transactions
+            li(class="list-group-item")= transaction
+        else
+            li(class="list-group-item") No transactions available
