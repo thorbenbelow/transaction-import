@@ -10,17 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Account {
- id Int @id @default(autoincrement())
- name String @unique
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  Transaction Transaction[]
 }
 
 model Transaction {
-    id  Int @id
-    date DateTime
-    account Account @relation(fields: [accountId], references: [id])
-    accountId Int
-    purpose String?
-    value Int
+  id        Int      @id
+  date      DateTime
+  account   Account  @relation(fields: [accountId], references: [id])
+  accountId Int
+  purpose   String?
+  value     Int
 }
