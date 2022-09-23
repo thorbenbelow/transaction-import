@@ -12,5 +12,4 @@ router.post('/new', async (req, res) => {
             }
         })
     )
-    console.log(account)
 })

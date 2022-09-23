@@ -24,8 +24,9 @@ export function parseVbmCsv(content: string) {
         .map(line => line.split(";"))
         .filter((line, idx) => line.length == 19 && idx !== 0)
         .map(f => {
+            const [day, month, year] = f[4].split('.').map(s => parseInt(s))
             return {
-                date: f[4],
+                date: new Date(year, month, day),
                 account: f[6],
                 purpose: f[10],
                 value: parseInt(f[11].replace(',', ""))
