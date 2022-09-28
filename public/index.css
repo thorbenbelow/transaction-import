@@ -1,0 +1,6 @@
+.w80ch {
+    max-width: 80ch;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}

@@ -11,11 +11,16 @@ block content
                 div(class="ms-2 me-auto w-100")
                     div(class="d-flex justify-content-between w-100")
                         div(class="fw-bold")= transaction.account
-                        div= transaction.date
+                        div(class="text-muted")= transaction.date.toISOString().split('T')[0]
                     div(class="d-flex justify-content-between w-100")
-                        p(class="m-0")= transaction.purpose
-                        p(class="m-0")= (transaction.value / 100).toFixed(2)
-
-
+                        p(class="m-0 w80ch text-muted")= transaction.purpose
+                        if transaction.value < 0
+                            p(class="m-0 text-danger")= (transaction.value / 100).toFixed(2)
+                        else
+                            p(class="m-0 text-success")= (transaction.value / 100).toFixed(2)
+                        if transaction.labels
+                            each label in transaction.labels
+                                span(class="badge rounded-pill text-bg-primary")=label.name
+                    div
         else
             li(class="list-group-item") No transactions available
