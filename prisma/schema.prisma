@@ -16,9 +16,24 @@ model Account {
 }
 
 model Transaction {
-  id      Int      @id @default(autoincrement())
+  id      Int       @id @default(autoincrement())
   date    DateTime
   account String
   purpose String?
   value   Int
+  Labeled Labeled[]
+}
+
+model Label {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Labeled Labeled[]
+}
+
+model Labeled {
+  id             Int         @id @default(autoincrement())
+  transaction_id Int
+  label_id       Int
+  transaction    Transaction @relation(fields: [transaction_id], references: [id])
+  label          Label       @relation(fields: [label_id], references: [id])
 }
