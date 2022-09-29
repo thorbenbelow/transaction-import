@@ -4,3 +4,13 @@
     white-space: nowrap;
     overflow: hidden;
 }
+
+.list-view-item {
+    text-decoration: none;
+    color: inherit;
+}
+
+.list-view-item:hover {
+    color: inherit;
+    cursor: pointer;
+}

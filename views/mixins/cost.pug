@@ -1,0 +1,5 @@
+mixin cost(value)
+    if value < 0
+        p(class="m-0 text-danger")= (value / 100).toFixed(2)
+    else
+        p(class="m-0 text-success")= (value / 100).toFixed(2)

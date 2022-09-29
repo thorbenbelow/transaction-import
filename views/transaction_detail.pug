@@ -1,6 +1,20 @@
 extends layout.pug
+include mixins/cost.pug
 
 block search
 
 block content
-    div(class="card")
+    div(class="card mt-5")
+        div(class="card-body")
+            div(class="d-flex justify-content-between")
+                h6(class="card-subtitle mb-2 text-muted")=date.toISOString().split('T')[0]
+                +cost(value)
+            h5(class="card-title")=account
+            p(class="card-text")=purpose
+            if labels
+                div(class="d-flex")
+                    each label in labels
+                        span(class="badge rounded-pill text-bg-primary")=label.name
+            form(action="/t/" + id + "/label" method="POST" class="d-flex" enctype="application/x-www-form-urlencoded")
+                input(type="text" class="form-control form-control-sm me-2" name="label")
+                button(type="submit" class="btn btn-outline-dark") Add Label
