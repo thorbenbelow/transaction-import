@@ -16,7 +16,7 @@ model Account {
 }
 
 model Transaction {
-  id      Int       @id @default(autoincrement())
+  id      Int       @id @unique
   date    DateTime
   account String
   purpose String?
@@ -36,4 +36,5 @@ model Labeled {
   label_id       Int
   transaction    Transaction @relation(fields: [transaction_id], references: [id])
   label          Label       @relation(fields: [label_id], references: [id])
+  @@unique([transaction_id, label_id])
 }
