@@ -2,14 +2,17 @@ import {Router} from "express";
 import fileUpload, {UploadedFile} from "express-fileupload"
 import {parseVbmCsv} from "../csv/parseVbmCsv";
 import {db} from "../prisma";
-import {addTransaction, getLabels} from "../service/transaction-service";
+import {addTransaction, getLabels, getTransactions} from "../service/transaction-service";
+import {Route} from "./routes";
 
-const router = Router()
+
+export const router = Router()
 
 function isUploadedFile(file: UploadedFile | UploadedFile[] | undefined): file is UploadedFile {
     return !!file && "data" in file
 }
 
+const uploadRoute = `${Route.Transaction}/upload`
 router.post("/upload", fileUpload(), async (req, res) => {
     const csv = req?.files?.csv
     if (isUploadedFile(csv)) {
@@ -18,7 +21,13 @@ router.post("/upload", fileUpload(), async (req, res) => {
         await Promise.all(data.map(t => addTransaction(t)))
         res.locals.csv = data
     }
-    res.redirect('/')
+    res.redirect(Route.Transaction)
+})
+
+
+router.get('/', async (req, res) => {
+    const transactions = await getTransactions();
+    res.render('transaction_list', {transactions, uploadRoute})
 })
 
 router.post("/:id/label", async (req, res) => {
