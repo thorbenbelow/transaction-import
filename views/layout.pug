@@ -1,3 +1,7 @@
+mixin navItem(title, href)
+    li(class="nav-item")
+        a(class="nav-link" href=href)= title
+
 doctype html
 html(lang="en")
     head
@@ -7,13 +11,16 @@ html(lang="en")
         title Banking
         link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous")
     body
-        nav(class="navbar navbar-dark bg-dark")
+        nav(class="navbar navbar-dark bg-dark navbar-expand-lg")
             div(class="container-fluid")
                 a(class="navbar-brand color" href="/") Banking
-                block search
-                form(action="/t/upload" method="POST" class="d-flex" enctype="multipart/form-data")
-                    input(type="file" class="form-control me-2" name="csv")
-                    button(type="submit" class="btn btn-outline-light") Upload
+                button(class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+                    span(class="navbar-toggler-icon")
+                div(class="collapse navbar-collapse" id="navbarSupportedContent")
+                    ul(class="navbar-nav me-auto mb-2 mb-lg-0")
+                        +navItem("Transactions", "/transactions")
+                        +navItem("Labels", "/labels")
+                block nav
         div(class="container-md")
             block content
 
