@@ -25,9 +25,11 @@ model Transaction {
 }
 
 model Label {
-  id      Int       @id @default(autoincrement())
-  name    String    @unique
-  Labeled Labeled[]
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  Description String?
+  color       String    @default("#00A5E3")
+  Labeled     Labeled[]
 }
 
 model Labeled {
@@ -36,5 +38,6 @@ model Labeled {
   label_id       Int
   transaction    Transaction @relation(fields: [transaction_id], references: [id])
   label          Label       @relation(fields: [label_id], references: [id])
+
   @@unique([transaction_id, label_id])
 }

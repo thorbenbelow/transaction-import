@@ -1,0 +1,16 @@
+extends layout.pug
+include mixins/cost.pug
+
+block search
+    div
+
+block content
+    form
+        input(name="color" type="color" )
+        input(name="name" type="text" placeholder="label name")
+        button new
+    ul(class="list-group mt-4")
+        each label in labels
+            li(class="list-group-item list-group-item-action") label.name
+        else
+            li(class="list-group-item") No labels created
