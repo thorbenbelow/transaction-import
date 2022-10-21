@@ -1,4 +1,4 @@
-export enum Route {
-    Transaction = '/transactions',
-    Label = "/label"
+export const routes = {
+    Transaction: '/transactions',
+    Label: "/label"
 }

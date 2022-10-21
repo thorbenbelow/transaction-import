@@ -18,8 +18,8 @@ html(lang="en")
                     span(class="navbar-toggler-icon")
                 div(class="collapse navbar-collapse" id="navbarSupportedContent")
                     ul(class="navbar-nav me-auto mb-2 mb-lg-0")
-                        +navItem("Transactions", "/transactions")
-                        +navItem("Labels", "/labels")
+                        +navItem("Transactions", ctx.routes.Transaction)
+                        +navItem("Labels", ctx.routes.Label)
                 block nav
         div(class="container-md")
             block content
