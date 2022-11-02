@@ -1,12 +1,12 @@
 import {Router} from 'express';
 import {getLabels} from "../service/label-service";
 import {db} from "../prisma";
+import {routes} from "./routes";
 
 const router = Router();
 
 router.get('/', async (req, res) => {
     const labels = await getLabels()
-    console.log({labels})
     res.render('label_list', {ctx: res.locals.ctx, labels: labels || []})
 })
 
@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
         name, color, description
     )
     await db(prisma => prisma.label.create({data: {name, color, description}}))
-    res.send(201)
+    res.redirect(routes.Label)
 })
 
 router.patch('/', async (req, res) => {
@@ -32,13 +32,13 @@ router.patch('/', async (req, res) => {
         data.description = description
     }
     await db(prisma => prisma.label.update({where: {id}, data}))
-    res.send(201)
+    res.redirect(routes.Label)
 })
 
-router.delete('/', async (req, res) => {
-    const {id} = req.body
+router.post('/delete', async (req, res) => {
+    const id = parseInt(req.body.id)
     await db(prisma => prisma.label.delete({where: {id}}))
-    res.send(201)
+    res.redirect(routes.Label)
 })
 
 export default router
