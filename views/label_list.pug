@@ -1,16 +1,18 @@
 extends layout.pug
-include mixins/cost.pug
-
-block search
-    div
 
 block content
-    form
-        input(name="color" type="color" )
-        input(name="name" type="text" placeholder="label name")
-        button new
+    div(class="card mt-4 p-2")
+        form(class="row g-3 w-100" action="/label" method="post")
+            div(class="col-auto")
+                input(name="color" type="color" )
+            div(class="col-auto")
+                input(name="name" type="text" placeholder="label name")
+            div(class="col-auto")
+                input(name="description" type="text" placeholder="Description (optional)")
+            div(class="col-auto")
+                button(type="submit" class="btn btn-outline-primary") new
     ul(class="list-group mt-4")
         each label in labels
-            li(class="list-group-item list-group-item-action") label.name
+            li(class="list-group-item list-group-item-action")=label.name
         else
             li(class="list-group-item") No labels created

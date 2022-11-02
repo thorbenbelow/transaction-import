@@ -27,7 +27,7 @@ model Transaction {
 model Label {
   id          Int       @id @default(autoincrement())
   name        String    @unique
-  Description String?
+  description String?
   color       String    @default("#00A5E3")
   Labeled     Labeled[]
 }
