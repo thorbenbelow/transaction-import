@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "type": "npm",
+            "name": "dev",
+            "command": "run",
+            "commandArguments": ["dev"],
+            "environment": {
+                "DATABASE_URL": "postgresql://postgres:postgres@localhost:5432/"    
+            },
+        },
+        {
+            "type": "npm",
+            "name": "db:start",
+            "command": "run",
+            "commandArguments": ["db:start"],
+        },
+        {
+            "type": "npm",
+            "name": "db:init",
+            "command": "run",
+            "commandArguments": ["db:init"],
+        },
+    ],
+}

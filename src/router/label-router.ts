@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {getLabels} from "../service/label-service";
+import {getLabelDetail, getLabels} from "../service/label-service";
 import {db} from "../prisma";
 import {routes} from "./routes";
 
@@ -39,6 +39,17 @@ router.post('/delete', async (req, res) => {
     const id = parseInt(req.body.id)
     await db(prisma => prisma.label.delete({where: {id}}))
     res.redirect(routes.Label)
+})
+
+router.get('/:labelId', async (req, res) => {
+    const {labelId} = req.params;
+    const  labelOrErr = await getLabelDetail(parseInt(labelId))
+
+    if(labelOrErr.isErr()) {
+       throw new Error()
+    }
+
+    res.render('label_detail', {ctx: res.locals.ctx, detail: labelOrErr.unwrapOr({})})
 })
 
 export default router
