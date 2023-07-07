@@ -2,8 +2,6 @@ extends layout.pug
 include mixins/cost.pug
 
 block nav
-    form(class="d-flex" role="search")
-        input(class="form-control me-2" type="search" placeholder="Search" aria-label="Search")
     form(action=uploadRoute method="POST" class="d-flex" enctype="multipart/form-data")
         input(type="file" class="form-control me-2" name="csv")
         button(type="submit" class="btn btn-outline-light") Upload

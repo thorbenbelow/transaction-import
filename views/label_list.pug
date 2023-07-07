@@ -18,7 +18,8 @@ block content
                 div=label.name
                 div=label.description
                 div(class="d-flex")
-                    button Edit
+                    a(href="/label/"+label.id)
+                        button Edit
                     form(method="post" action="/label/delete")
                         input(type="hidden" value=label.id name="id")
                         button(type="submit") Delete
