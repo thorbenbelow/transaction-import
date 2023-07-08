@@ -5,7 +5,7 @@ export type Transaction = {
     date: string,
     account: string,
     purpose: string,
-    value: string
+    value: number
 }
 
 enum Err {

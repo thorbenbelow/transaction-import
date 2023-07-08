@@ -3,7 +3,6 @@ import {db} from "../prisma";
 import {getLabels, getTransactions} from "../service/transaction-service";
 import {routes} from "./routes";
 
-
 export const router = Router()
 
 const uploadRoute = `${routes.Transaction}/upload`
