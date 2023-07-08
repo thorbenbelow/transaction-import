@@ -1,5 +1,6 @@
 import express from 'express'
-import transactionRouter from "./router/transaction-router"
+import transactionRouterOld from "./router/transaction-router-old"
+import transactionRouter from "./router/transaction-router";
 import labelRouter from "./router/label-router";
 import bodyParser from "body-parser";
 import {routes} from "./router/routes";
@@ -20,7 +21,12 @@ app.use(function (req, res, next) {
     next()
 })
 
-app.use(routes.Transaction, transactionRouter)
+const apiRouter = express.Router()
+apiRouter.use(routes.Transaction, transactionRouter)
+
+app.use('/api', apiRouter)
+
+app.use(routes.Transaction, transactionRouterOld)
 app.use(routes.Label, labelRouter)
 
 app.get('/', async (req, res) => {
