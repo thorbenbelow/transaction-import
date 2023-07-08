@@ -2,24 +2,33 @@
     "configurations": [
         {
             "type": "npm",
-            "name": "dev",
+            "name": "api:dev",
             "command": "run",
             "commandArguments": ["dev"],
             "environment": {
                 "DATABASE_URL": "postgresql://postgres:postgres@localhost:5432/"    
             },
-        },
-        {
-            "type": "npm",
-            "name": "db:start",
-            "command": "run",
-            "commandArguments": ["db:start"],
+            "workingDir": "api/",
         },
         {
             "type": "npm",
             "name": "db:init",
             "command": "run",
             "commandArguments": ["db:init"],
+            "workingDir": "api",
+        },
+        {
+            "type": "docker-run",
+            "name": "db:dev",
+            "imageIdOrName": "postgres",
+            "runOptions": "-p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres",
+        },
+        {
+            "type": "npm",
+            "name": "webapp:dev",
+            "command": "run",
+            "commandArguments": ["dev"],
+            "workingDir": "webapp/",
         },
     ],
 }
