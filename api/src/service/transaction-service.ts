@@ -1,7 +1,7 @@
 import {Labeled, Transaction} from "@prisma/client";
 import {db} from "../prisma";
 
-export async function getTransactions() {
+export async function getTransactions(): Promise<Transaction[]> {
     const transactions = await db(tx => tx.transaction.findMany({include: {Labeled: true}})) || []
     return Promise.all(transactions.map(async transaction => {
         const labels = await getLabels(transaction?.Labeled)

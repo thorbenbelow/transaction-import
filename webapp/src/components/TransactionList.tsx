@@ -12,7 +12,6 @@ export default function TransactionList(props: {transactions: Transaction[]}) {
     const {transactions} = props
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -40,6 +39,5 @@ export default function TransactionList(props: {transactions: Transaction[]}) {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </main>
         )
 }
