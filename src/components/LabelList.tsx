@@ -1,9 +1,9 @@
 'use client'
-import {Divider, InputBase, List, ListItem, ListItemText} from "@mui/material";
+import {Badge, Divider, InputBase, List, ListItem, ListItemText} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import {useState} from "react";
 import IconButton from "@mui/material/IconButton";
-import {Add, Circle, ExpandLess, ExpandMore} from "@mui/icons-material";
+import {Add, CircleOutlined, Delete, Edit, ExpandLess, ExpandMore} from "@mui/icons-material";
 import {Label} from "@prisma/client";
 
 export default function LabelList(props: {
@@ -33,13 +33,19 @@ export default function LabelList(props: {
         setExpanded(true)
     }
 
+    async function deleteLabel(id: number) {
+        const idx = labels.findIndex(l => l.id === id)
+        labels.splice(idx, idx)
+        await fetch(`http://localhost:3000/api/labels/${id}`, {method: "DELETE"})
+    }
+
 
     return (
         <Paper sx={{minWidth: "240px"}}>
             <Paper
                 sx={{p: '2px 4px', display: 'flex', alignItems: 'center'}}>
                 <IconButton component="label" sx={{color: newLabel.color}}>
-                    <Circle></Circle>
+                    <CircleOutlined></CircleOutlined>
                     <input hidden type="color" onChange={evt => setNewLabel({...newLabel, color: evt.target.value})}/>
                 </IconButton>
                 <InputBase placeholder="Create new label"
@@ -49,9 +55,9 @@ export default function LabelList(props: {
                 </IconButton>
 
                 <Divider sx={{height: 28, m: 0.5}} orientation="vertical"></Divider>
-                <IconButton color="primary">
-                    {expanded ? <ExpandLess onClick={expandLess}></ExpandLess> :
-                        <ExpandMore onClick={expandMore}></ExpandMore>}
+                <IconButton color="primary" onClick={() => expanded ? expandLess() : expandMore()}>
+                    {expanded ? <ExpandLess></ExpandLess> :
+                        <ExpandMore></ExpandMore>}
                 </IconButton>
 
             </Paper>
@@ -63,9 +69,25 @@ export default function LabelList(props: {
             <List>
                 {labels.map(label => <ListItem key={label.id}>
                     <IconButton component="label" sx={{color: label.color}}>
-                        <Circle></Circle>
+                        <Badge badgeContent={label.id} color="secondary">
+                            <CircleOutlined></CircleOutlined>
+                        </Badge>
                     </IconButton>
-                    <ListItemText primary={label.name} secondary={label.description}></ListItemText>
+                    <ListItemText sx={{
+                        '.MuiListItemText-secondary': {
+                            textOverflow: 'ellipsis',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap'
+                        }
+                    }}
+                                  primary={label.name}
+                                  secondary={label.description}></ListItemText>
+                    <IconButton size="small" aria-label='edit'>
+                        <Edit fontSize="small"></Edit>
+                    </IconButton>
+                    <IconButton size="small" aria-label='delete' onClick={() => deleteLabel(label.id)}>
+                        <Delete fontSize="small"></Delete>
+                    </IconButton>
                 </ListItem>)}
             </List>
         </Paper>

@@ -1,14 +1,15 @@
-import {NextResponse} from "next/server";
 import {Label} from "@prisma/client";
 import {db} from "@/lib/prisma";
+import {NextResponse} from "next/server";
 
-export async function POST(request: Request) {
-    const {name, description, color} = await request.json()
+
+export async function POST(req: Request) {
+    const {name, description, color} = await req.json()
     const label = await createLabel({name, color, description})
     return NextResponse.json({data: label})
 }
 
-export async function GET(request: Request) {
+export async function GET(req: Request) {
     const labels = await getLabels();
     return NextResponse.json({data: labels})
 }
