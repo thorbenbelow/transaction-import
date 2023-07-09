@@ -5,11 +5,10 @@ import {getTransactions, Transaction} from '@/services/transaction-service'
 export default async function Home() {
 
   const res = await getTransactions()
-  console.log(res)
   const transactions = res.unwrapOr([])
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-12">
+    <main className="flex flex-col items-center justify-between pt-6 px-6">
       <TransactionList transactions={transactions} />
     </main>
   )
