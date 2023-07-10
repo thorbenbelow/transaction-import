@@ -58,9 +58,3 @@ export function addLabel(label: Omit<Label, "id">): ResultAsync<Label, Err> {
         body: JSON.stringify(label)
     }).andThen(safeJsonParse)
 }
-
-export function postCsvTranscations(file: FileList): ResultAsync<null, Err> {
-    const formData = new FormData()
-    formData.append('csv', file[0], file[0].name)
-    return safeFetch('transactions', {method: 'POST', body: formData}).map(() => null)
-}
