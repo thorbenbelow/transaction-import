@@ -1,6 +1,5 @@
-import {Label} from "@prisma/client";
-import {db} from "@/lib/prisma";
 import {NextResponse} from "next/server";
+import {createLabel, getLabels} from "@/lib/labels";
 
 
 export async function POST(req: Request) {
@@ -13,12 +12,3 @@ export async function GET(req: Request) {
     const labels = await getLabels();
     return NextResponse.json({data: labels})
 }
-
-function getLabels() {
-    return db(prisma => prisma.label.findMany())
-}
-
-function createLabel(label: Omit<Label, 'id'>) {
-    return db(prisma => prisma.label.create({data: label}))
-}
-

@@ -1,5 +1,6 @@
-import {Label, Labeled, Transaction} from "@prisma/client";
+import {Labeled, Transaction} from "@prisma/client";
 import {db} from "@/lib/prisma";
+import {TransactionWithLabelIdsDto} from "@/lib/api";
 
 export async function createTransactions(transactions: Omit<Transaction, 'id'>[]) {
     await Promise.all(transactions.map(createTransaction))
@@ -10,21 +11,34 @@ function createTransaction(transaction: Omit<Transaction, 'id'>) {
     return db(prisma => prisma.transaction.create({data: {id, ...transaction}}))
 }
 
-export async function getTransactions(): Promise<Transaction[]> {
-    const transactions = await db<Transaction[]>(prisma => prisma.transaction.findMany({include: {Labeled: true}})) || []
-    return Promise.all(transactions.map(async transaction => {
-        const labels = await getLabelsFromLabeled(transaction?.Labeled)
-        return {...transaction, labels: labels || []}
+export async function getTransactions(): Promise<TransactionWithLabelIdsDto[]> {
+    const labeledTransactions = await db(prisma => prisma.transaction.findMany({include: {Labeled: true}}))
+
+    if (!labeledTransactions) {
+        return []
+    }
+
+    return labeledTransactions.map(t => ({
+        date: t.date.toISOString(),
+        account: t.account,
+        purpose: t.purpose,
+        value: t.value,
+        id: t.id,
+        labels: t.Labeled.map(l => l.label_id)
     }))
 }
 
-async function getLabelsFromLabeled(ids: Labeled[]): Promise<Label[]> {
+
+async function getLabelsFromLabeled(ids: Labeled[]): Promise<({
+    name: string,
+    color: string
+} | undefined | null)[]> {
     return Promise
         .all(ids
             .map(l => l.label_id)
             .map(id => db(prisma => prisma
                 .label
-                .findFirst({where: {id}, select: {name: true}}))
+                .findFirst({where: {id}, select: {name: true, color: true}}))
             )
         )
 }

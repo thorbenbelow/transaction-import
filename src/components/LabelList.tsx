@@ -5,9 +5,10 @@ import {useState} from "react";
 import IconButton from "@mui/material/IconButton";
 import {Add, CircleOutlined, Delete, Edit, ExpandLess, ExpandMore} from "@mui/icons-material";
 import {Label} from "@prisma/client";
+import {LabelDto} from "@/lib/api";
 
 export default function LabelList(props: {
-    labels: Label[]
+    labels: LabelDto[]
 }) {
     const {labels} = props;
     const [newLabel, setNewLabel] = useState<Omit<Label, 'id'>>({name: "", color: "", description: null})

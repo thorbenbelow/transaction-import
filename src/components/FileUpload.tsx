@@ -1,6 +1,7 @@
 import React from "react";
 import IconButton from "@mui/material/IconButton";
 import {Upload} from "@mui/icons-material";
+import {api} from "@/lib/api";
 
 export default function FileUpload() {
     const upload = async (evt: React.ChangeEvent<HTMLInputElement>) => evt.target.files && postCsvTranscations(evt.target.files)
@@ -20,11 +21,7 @@ async function postCsvTranscations(files: FileList) {
     }
     const content = await file.text()
     const transactions = parseVbmCsv(content)
-    return fetch("http://localhost:3000/api/transactions", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(transactions)
-    })
+    return api.transactions.post(transactions)
 }
 
 function parseVbmCsv(content: string) {
@@ -35,7 +32,7 @@ function parseVbmCsv(content: string) {
         .map(f => {
             const [day, month, year] = f[4].split('.').map(s => parseInt(s))
             return {
-                date: new Date(year, month, day),
+                date: new Date(year, month, day).toString(),
                 account: f[6],
                 purpose: f[10],
                 value: parseInt(f[11].replace(',', ""))

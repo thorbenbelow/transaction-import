@@ -1,19 +1,33 @@
 import TransactionList from "@/components/TransactionList";
 import LabelList from "@/components/LabelList";
-import {fetch} from "next/dist/compiled/@edge-runtime/primitives";
+import {api, LabelDto} from "@/lib/api";
 
 export default async function Home() {
 
-    const tRes = await fetch("http://localhost:3000/api/transactions")
-    const transactions = await tRes.json()
+    const transactions = await api.transactions.get()
+    const labels = await api.labels.get()
 
-    const lRes = await fetch("http://localhost:3000/api/labels")
-    const labels = await lRes.json()
+    const mapToLabelDtos = (ids: number[]): LabelDto[] => {
+        const dtos: LabelDto[] = []
+        for (const id of ids) {
+            const label = labels.find(l => l.id === id)
+            if (label) {
+                dtos.push(label)
+            }
+        }
+        return dtos
+    }
+
+    const transactionsWithLabels = transactions.map(t => ({
+        ...t,
+        labels: mapToLabelDtos(t.labels)
+    }))
+
 
     return (
         <main className="flex pt-6 px-6 gap-1">
-            <TransactionList transactions={transactions.data}/>
-            <LabelList labels={labels.data}/>
+            <TransactionList transactions={transactionsWithLabels} labels={labels}/>
+            <LabelList labels={labels}/>
         </main>
     )
 }

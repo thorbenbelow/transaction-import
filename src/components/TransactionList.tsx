@@ -1,9 +1,9 @@
 'use client'
 import Paper from '@mui/material/Paper';
-import {Transaction} from "@/services/transaction-service";
 import {ChangeEvent, useMemo, useState} from 'react'
 import {
     Box,
+    Chip,
     Table,
     TableBody,
     TableCell,
@@ -14,7 +14,10 @@ import {
     TableRow
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import {FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage} from "@mui/icons-material";
+import {Add, FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage, Remove} from "@mui/icons-material";
+import {LabelDto, TransactionDto} from "@/lib/api";
+import LabelInput from "@/components/LabelInput";
+
 
 function centsToEuroString(x: number): string {
     return (x / 100).toFixed(2)
@@ -24,11 +27,20 @@ function getColor(x: number): string {
     return x >= 0 ? '#4db6ac' : '#c62828'
 }
 
-export default function TransactionList(props: { transactions: Transaction[] }) {
-    const {transactions} = props
+type TransactionDtoWithLabels = TransactionDto & {
+    labels: Omit<LabelDto, 'id' | 'description'>[]
+}
+export default function TransactionList(props: {
+    transactions: TransactionDtoWithLabels[],
+    labels: LabelDto[]
+}) {
+    const {transactions, labels} = props
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [transactionEditMode, setTransactionEditMode] = useState(false)
+
+    const [open, setOpen] = useState(-1)
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -51,6 +63,21 @@ export default function TransactionList(props: { transactions: Transaction[] }) 
         [page, rowsPerPage, transactions],
     );
 
+    async function addLabelToTransaction(transaction: TransactionDtoWithLabels) {
+        const data = {
+            transactions: {
+                add: [transaction.id]
+            }
+        }
+        const res = await fetch("http://localhost:3000/api/labels/1", {
+            method: "PATCH",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(data)
+        })
+        const {name, color} = await res.json()
+        transaction.labels.push({color, name})
+    }
+
     return (
         <>
             <TableContainer component={Paper}>
@@ -59,19 +86,40 @@ export default function TransactionList(props: { transactions: Transaction[] }) 
                         <TableRow>
                             <TableCell>Date</TableCell>
                             <TableCell align="left">Account</TableCell>
+                            <TableCell align="left">Purpose</TableCell>
+
+                            <TableCell>Labels</TableCell>
                             <TableCell align="right">Value</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {visibleRows.map((row: Transaction) => (
+                        {visibleRows.map(row => (
                             <TableRow
                                 key={row.id}
                                 sx={{'&:last-child td, &:last-child th': {border: 0}}}
                             >
                                 <TableCell component="th" scope="row" sx={{width: "8%"}}>
-                                    {row.date.split('T')[0]}
+                                    {new Date(row.date).toLocaleDateString("de")}
                                 </TableCell>
-                                <TableCell align="left">{row.account}</TableCell>
+                                <TableCell align="left" sx={{width: "20%"}}>{row.account}</TableCell>
+                                <TableCell sx={{
+                                    maxWidth: "40ch",
+                                    minWidth: "40ch",
+                                    textOverflow: "ellipsis",
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap"
+                                }}>{row.purpose}</TableCell>
+                                <TableCell sx={{width: "20%"}}>
+                                    {row.labels.map(label => <Chip variant="outlined"
+                                                                   sx={{color: label.color, borderColor: label.color}}
+                                                                   key={label.name}
+                                                                   label={label.name}></Chip>)}
+                                    <IconButton onClick={() => row.id === open ? setOpen(-1) : setOpen(row.id)}>
+                                        {transactionEditMode ? <Remove></Remove> : <Add></Add>}
+                                    </IconButton>
+                                    {open === row.id && <LabelInput transaction={row} labels={labels}></LabelInput>}
+                                </TableCell>
+
                                 <TableCell align="right"
                                            sx={{color: getColor(row.value)}}>{centsToEuroString(row.value)}</TableCell>
                             </TableRow>
