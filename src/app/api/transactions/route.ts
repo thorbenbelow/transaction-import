@@ -1,16 +1,14 @@
-import {NextResponse} from "next/server";
-import {createTransactions, getTransactions} from "@/lib/transactions";
+import { NextResponse } from "next/server";
+import { createTransactions, getTransactions } from "@/lib/transactions";
 
 export async function GET(req: Request) {
     const transactions = await getTransactions()
-    return NextResponse.json({data: transactions})
+    console.log(transactions)
+    return NextResponse.json({ data: transactions })
 }
 
 export async function POST(req: Request) {
     const transactions = await req.json()
     await createTransactions(transactions)
-    return NextResponse.json({data: transactions})
+    return NextResponse.json({ data: transactions })
 }
-
-
-
