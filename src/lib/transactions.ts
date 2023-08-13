@@ -1,6 +1,6 @@
-import {Labeled, Transaction} from "@prisma/client";
-import {db} from "@/lib/prisma";
-import {TransactionWithLabelIdsDto} from "@/lib/api";
+import { Labeled, Transaction } from "@prisma/client";
+import { db } from "@/lib/firestore";
+import { TransactionWithLabelIdsDto } from "@/lib/api";
 
 export async function createTransactions(transactions: Omit<Transaction, 'id'>[]) {
     await Promise.all(transactions.map(createTransaction))
@@ -8,11 +8,11 @@ export async function createTransactions(transactions: Omit<Transaction, 'id'>[]
 
 function createTransaction(transaction: Omit<Transaction, 'id'>) {
     const id = cyrb53(`${transaction.date}-${transaction.account}-${transaction.purpose}-${transaction.value}`)
-    return db(prisma => prisma.transaction.create({data: {id, ...transaction}}))
+    return db(prisma => prisma.transaction.create({ data: { id, ...transaction } }))
 }
 
 export async function getTransactions(): Promise<TransactionWithLabelIdsDto[]> {
-    const labeledTransactions = await db(prisma => prisma.transaction.findMany({include: {Labeled: true}}))
+    const labeledTransactions = await db(prisma => prisma.transaction.findMany({ include: { Labeled: true } }))
 
     if (!labeledTransactions) {
         return []
@@ -38,7 +38,7 @@ async function getLabelsFromLabeled(ids: Labeled[]): Promise<({
             .map(l => l.label_id)
             .map(id => db(prisma => prisma
                 .label
-                .findFirst({where: {id}, select: {name: true, color: true}}))
+                .findFirst({ where: { id }, select: { name: true, color: true } }))
             )
         )
 }
