@@ -18,15 +18,9 @@ export default async function Home() {
         return dtos
     }
 
-    const transactionsWithLabels = transactions.map(t => ({
-        ...t,
-        labels: mapToLabelDtos(t.labels)
-    }))
-
-
     return (
         <main className="flex pt-6 px-6 gap-1">
-            <TransactionList transactions={transactionsWithLabels} labels={labels}/>
+            <TransactionList transactions={transactions as any} labels={labels}/>
             <LabelList labels={labels}/>
         </main>
     )
